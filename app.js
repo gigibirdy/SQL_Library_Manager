@@ -46,7 +46,7 @@ app.get('/books', asyncHandler(async (req, res) => {
     limit: 10,
     offset: offset
   });
-  res.render('all_books', {
+  res.render('index', {
     books: books,
     title: 'Books',
     numberOfBooks: bookCount.length
@@ -86,7 +86,7 @@ app.get('/books/search', asyncHandler(async (req, res) => {
     }
   });
   if (req.query.search) {
-    res.render('all_books', {
+    res.render('index', {
       books: books,
       title: 'Books'
     });
@@ -97,7 +97,7 @@ app.get('/books/search', asyncHandler(async (req, res) => {
 
 //new book route
 app.get('/books/new', (req, res) => {
-  res.render("new_book", {
+  res.render("new-book", {
     title: 'New Book'
   });
 });
@@ -111,7 +111,7 @@ app.post('/books/new', asyncHandler(async (req, res) => {
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
       new_book = await Book.build(req.body);
-      res.render("new_book", {
+      res.render("new-book", {
         errors: error.errors,
         title: "New Book"
       });
@@ -125,7 +125,7 @@ app.post('/books/new', asyncHandler(async (req, res) => {
 app.get("/books/:id", asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if (book) {
-    res.render("book_details", {
+    res.render("update-book", {
       book: book,
       title: book.title
     });
@@ -145,7 +145,7 @@ app.post('/books/:id', asyncHandler(async (req, res) => {
     if (error.name === "SequelizeValidationError") {
       book = await Book.build(req.body);
       book.id = req.params.id;
-      res.render("book_details", {
+      res.render("update-book", {
         book: book,
         errors: error.errors,
         title: "Error"
@@ -174,10 +174,10 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   //render the 404 error page
   if(err.status === 404){
-    res.render('page_not_found');
-    //for all else errors will render the server_error page
+    res.render('page-not-found');
+    //for all else errors will render the error page
   } else {
-    res.render('server_error');
+    res.render('error');
   }
 });
 
